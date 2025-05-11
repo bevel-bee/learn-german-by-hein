@@ -10,7 +10,7 @@ const ChatHeader: React.FC = () => {
           <div className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center mr-2">
             <MessageCircle size={18} className="text-white" />
           </div>
-          <h1 className="text-xl font-bold">Together AI Chat</h1>
+          <h1 className="text-xl font-bold">Learn German by Hein</h1>
         </div>
         <div className="ml-auto text-sm text-gray-500">
           Powered by Qwen/Qwen3-235B

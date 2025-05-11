@@ -52,10 +52,10 @@ const Index = () => {
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       const mockResponses = [
-        "That's a great question! I'd be happy to help you with that.",
-        "Based on my knowledge, there are several approaches to this topic.",
-        "I understand what you're asking. Let me provide some information.",
-        "That's an interesting query. Here's what I know about it."
+        "That's a great question! I'd be happy to help you learn German.",
+        "In German, you would say: Hallo, wie geht es dir? (Hello, how are you?)",
+        "Let me teach you a useful German phrase: 'Ich möchte Deutsch lernen' means 'I want to learn German'.",
+        "In German grammar, remember that nouns are always capitalized, unlike in English."
       ];
       
       const randomResponse = mockResponses[Math.floor(Math.random() * mockResponses.length)];
@@ -82,9 +82,9 @@ const Index = () => {
         {messages.length === 0 ? (
           <div className="h-full flex items-center justify-center">
             <div className="text-center space-y-3 max-w-md">
-              <h2 className="text-2xl font-bold text-gray-700">Welcome to Together AI Chat</h2>
+              <h2 className="text-2xl font-bold text-gray-700">Welcome to Learn German by Hein</h2>
               <p className="text-gray-500">
-                Ask me anything and I'll do my best to help you.
+                Ask me anything about German language and I'll help you learn.
               </p>
             </div>
           </div>
