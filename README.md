@@ -1,73 +1,55 @@
-# Welcome to your Lovable project
 
-## Project info
+# Together AI Chat Interface
 
-**URL**: https://lovable.dev/projects/f2be5352-81aa-43d8-be32-d3b364067f78
+This project is a web interface for interacting with Together AI's language models. The interface provides a clean, user-friendly chat experience similar to ChatGPT or Claude.
 
-## How can I edit this code?
+## Features
 
-There are several ways of editing your application.
+- Clean, responsive chat interface
+- Message history with visual distinction between user and AI
+- Input area with send button
+- Loading states and error handling
+- Prepared for backend integration
 
-**Use Lovable**
+## Backend Integration
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/f2be5352-81aa-43d8-be32-d3b364067f78) and start prompting.
+This frontend is designed to connect to a Python backend that leverages the Together AI API. The backend should implement an endpoint (e.g., `/chat`) that processes messages and returns AI responses.
 
-Changes made via Lovable will be committed automatically to this repo.
+### Example Python Backend (Flask)
 
-**Use your preferred IDE**
+```python
+from flask import Flask, request, jsonify
+from together import Together
+import os
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+app = Flask(__name__)
+client = Together(api_key=os.getenv("TOGETHER_API_KEY"))
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+@app.route("/chat", methods=["POST"])
+def chat():
+    user_input = request.json["message"]
+    response = client.chat.completions.create(
+        model="Qwen/Qwen3-235B-A22B-fp8-tput",
+        messages=[{"role": "user", "content": user_input}]
+    )
+    return jsonify({"reply": response.choices[0].message.content})
 ```
 
-**Edit a file directly in GitHub**
+## Getting Started
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+1. Clone this repository
+2. Run `npm install` to install dependencies
+3. Run `npm run dev` to start the development server
+4. Set up your Python backend and update the fetch URL in `src/pages/Index.tsx`
 
-**Use GitHub Codespaces**
+## Technologies Used
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+- React with TypeScript
+- Tailwind CSS for styling
+- shadcn/ui for UI components
+- Vite for development and building
 
-## What technologies are used for this project?
+## Deployment
 
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/f2be5352-81aa-43d8-be32-d3b364067f78) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+For the frontend, you can deploy to GitHub Pages, Vercel, or Netlify.
+For the backend, services like Render.com, Railway.app, Fly.io, or Vercel Serverless Functions work well.
