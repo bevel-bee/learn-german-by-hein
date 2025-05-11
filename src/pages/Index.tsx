@@ -13,7 +13,8 @@ interface Message {
   content: string;
 }
 
-const SUPABASE_FUNCTION_URL = import.meta.env.VITE_SUPABASE_FUNCTION_URL || 'https://your-supabase-project.supabase.co/functions/v1/chat';
+// Use the environment variable, with a fallback for development
+const SUPABASE_FUNCTION_URL = import.meta.env.VITE_SUPABASE_FUNCTION_URL || 'https://tytppbzfvlmwdktrgdpi.supabase.co/functions/v1/chat';
 
 const Index = () => {
   const [input, setInput] = useState('');
@@ -42,10 +43,14 @@ const Index = () => {
     setIsLoading(true);
 
     try {
+      console.log("Calling Supabase Function at:", SUPABASE_FUNCTION_URL);
       // Call our Supabase Edge Function
       const response = await fetch(SUPABASE_FUNCTION_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Origin": window.location.origin
+        },
         body: JSON.stringify({ message: input })
       });
       
