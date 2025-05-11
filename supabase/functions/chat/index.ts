@@ -29,6 +29,8 @@ serve(async (req) => {
       );
     }
 
+    console.log("Calling Together API with message:", message);
+
     // Call Together AI API
     const response = await fetch("https://api.together.xyz/v1/chat/completions", {
       method: "POST",
@@ -50,11 +52,21 @@ serve(async (req) => {
 
     const data = await response.json();
     
+    if (!response.ok) {
+      console.error("API Error:", data);
+      return new Response(
+        JSON.stringify({ error: "Failed to get response from AI service", details: data }),
+        { headers: { "Content-Type": "application/json" }, status: response.status }
+      );
+    }
+    
+    console.log("Successfully received response from Together API");
+    
     return new Response(
       JSON.stringify({ 
         reply: data.choices[0].message.content
       }),
-      { headers: { "Content-Type": "application/json" } }
+      { headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } }
     );
   } catch (error) {
     console.error("Error:", error.message);
