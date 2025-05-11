@@ -13,6 +13,8 @@ interface Message {
   content: string;
 }
 
+const SUPABASE_FUNCTION_URL = import.meta.env.VITE_SUPABASE_FUNCTION_URL || 'https://your-supabase-project.supabase.co/functions/v1/chat';
+
 const Index = () => {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
@@ -40,27 +42,22 @@ const Index = () => {
     setIsLoading(true);
 
     try {
-      // This is a mock API call - in a real app, this would connect to your backend
-      // const response = await fetch("https://your-backend-url/chat", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({ message: input })
-      // });
-      // const data = await response.json();
-
-      // Mock response while we don't have a real backend
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Call our Supabase Edge Function
+      const response = await fetch(SUPABASE_FUNCTION_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: input })
+      });
       
-      const mockResponses = [
-        "That's a great question! I'd be happy to help you learn German.",
-        "In German, you would say: Hallo, wie geht es dir? (Hello, how are you?)",
-        "Let me teach you a useful German phrase: 'Ich möchte Deutsch lernen' means 'I want to learn German'.",
-        "In German grammar, remember that nouns are always capitalized, unlike in English."
-      ];
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to get response');
+      }
       
-      const randomResponse = mockResponses[Math.floor(Math.random() * mockResponses.length)];
-      const aiResponse = { role: 'assistant' as const, content: randomResponse };
+      const data = await response.json();
       
+      // Add AI response to chat
+      const aiResponse = { role: 'assistant' as const, content: data.reply };
       setMessages(prevMessages => [...prevMessages, aiResponse]);
     } catch (error) {
       console.error('Error sending message:', error);
